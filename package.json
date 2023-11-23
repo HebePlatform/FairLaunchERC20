@@ -1,0 +1,22 @@
+{
+  "name": "fairlauncherc20",
+  "version": "1.0.0",
+  "description": "FairLaunchERC20",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HebePlatform/FairLaunchERC20.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HebePlatform/FairLaunchERC20/issues"
+  },
+  "homepage": "https://github.com/HebePlatform/FairLaunchERC20#readme",
+  "dependencies": {
+    "web3": "^4.1.0"
+  }
+}
