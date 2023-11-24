@@ -22,7 +22,7 @@ async function load() {
             'gas': 200000,
             'gasPrice': gas_price,
             'data': data,
-            'chainId': web3.utils.toHex(63)
+            'chainId': web3.utils.toHex(61)
         }
         console.log(transaction);
         let hex = await web3.eth.accounts.signTransaction(transaction, private_key);
