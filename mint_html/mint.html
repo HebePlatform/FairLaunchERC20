@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./web3.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./jquery.min.js"></script>
+</head>
+<body>
+<div class="main">
+
+    <section class="author-area " style="padding-top:40px">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-12">
+                    <!-- Intro -->
+                    <div class="intro mt-5 mt-lg-0 mb-4 mb-lg-5">
+                        <div class="intro-content">
+                            <span>Get Started</span>
+                            <h3 class="mt-3 mb-0">Mint Fair ERC20 - </h3>
+                        </div>
+                    </div>
+                    <!-- Item Form -->
+                    <form class="item-form card no-hover">
+                        <div class="row">
+
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="" id="rpc" type="text" class="form-control"
+                                           name="Rpc"
+                                           placeholder="RPC" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value=""
+                                           id="key" type="text" class="form-control" name="Private Key"
+                                           placeholder="Private Key" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="" id="contract" type="text"
+                                           class="form-control" name="Contract Address"
+                                           placeholder="Contract Address" required="required">
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="100" id="limit" type="text" class="form-control" name="Limit"
+                                           placeholder="Limit" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="1" id="gasprice" type="text" class="form-control" name="Gas price"
+                                           placeholder="Gas price" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="60000" id="gaslimit" type="text" class="form-control" name="Gas limit"
+                                           placeholder="Gas limit" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mt-3">
+                                    <input value="0x48c54b9d" id="data" type="text" class="form-control" name="Data"
+                                           placeholder="Data" required="required">
+                                </div>
+                            </div>
+                            <div class="col-12" style="margin-top: 10px">
+                                <button id="mint" class="btn w-100 mt-3 mt-sm-4" type="button">
+                                    Mint Fair ERC20
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="div">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    (function ($) {
+
+        $("#mint").on('click', async function (e) {
+            let rpc = $("#rpc").val()
+            let key = $("#key").val()
+            let contract = $("#contract").val()
+            let limit = $("#limit").val()
+            let gasprice = $("#gasprice").val()
+            let gaslimit = $("#gaslimit").val()
+            let data = $("#data").val()
+            console.log(rpc, "rpc");
+            console.log(key, "key");
+            console.log(contract, "contract");
+            console.log(limit, "limit");
+            console.log(gasprice, "gasprice");
+            console.log(gaslimit, "gaslimit");
+            console.log(data, "data");
+            let web3 = new Web3(rpc)
+
+            let from_address = web3.eth.accounts.privateKeyToAccount(key).address
+            let nonce = await web3.eth.getTransactionCount(from_address);
+            nonce = web3.utils.toNumber(nonce)
+            for (let i = 0; i < limit; i++) {
+                let transaction = {
+                    'from': from_address,
+                    'to': contract,
+                    'value': web3.utils.toHex(0),
+                    'nonce': web3.utils.toHex(nonce),
+                    'gas': gaslimit,
+                    'gasPrice': web3.utils.toWei(gasprice, 'Gwei'),
+                    'data': data,
+                    'chainId': web3.utils.toHex(61)
+                }
+                let hex = await web3.eth.accounts.signTransaction(transaction, key);
+                try {
+                    web3.eth.sendSignedTransaction(hex.rawTransaction)
+                    console.log(hex.transactionHash);
+                    $("#div").append("<div class=\"alert alert-primary\" role=\"alert\">\n" +
+                        "                            <a target=\"_blank\" href=\"https://etc.blockscout.com/tx/" + hex.transactionHash + "\">Nonce:" + nonce + " Hash:" + hex.transactionHash + "</a>\n" +
+                        "                        </div>")
+                    nonce = nonce + 1;
+                } catch (e) {
+                    console.log(e);
+                }
+
+            }
+        })
+    }(jQuery))
+</script>
+</body>
+</html>
